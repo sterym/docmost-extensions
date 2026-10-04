@@ -1,0 +1,78 @@
+.wrapper {
+  margin: var(--mantine-spacing-sm) 0;
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-6)
+  );
+  user-select: none;
+}
+
+.selected {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 1px;
+}
+
+.header {
+  margin-bottom: 4px;
+}
+
+.controls {
+  opacity: 0.75;
+
+  @mixin hover {
+    opacity: 1;
+  }
+}
+
+.empty {
+  padding: 4px 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  margin: 0;
+  padding: 0;
+}
+
+.link {
+  display: block;
+  width: 100%;
+  text-align: start;
+  padding: 4px 6px;
+  border-radius: var(--mantine-radius-sm);
+  color: var(--mantine-color-text);
+  font-size: var(--mantine-font-size-sm);
+  line-height: var(--mantine-line-height-sm);
+  word-break: break-word;
+  overflow-wrap: break-word;
+
+  @mixin hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-2),
+      var(--mantine-color-dark-5)
+    );
+  }
+}
+
+/* Hidden probe: its computed `top` equals the fixed app header height, so the
+   view can offset window scrolling. Same trick as upstream's sidebar TOC. */
+.headerPadding {
+  display: none;
+  top: calc(
+    var(--app-shell-header-offset, 0rem) + var(--app-shell-header-height, 0rem)
+  );
+}
+
+@media print {
+  .controls {
+    display: none;
+  }
+}
