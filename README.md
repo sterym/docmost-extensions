@@ -12,8 +12,10 @@ Current pin: see [`UPSTREAM_VERSION`](UPSTREAM_VERSION).
 ```
 UPSTREAM_VERSION        git tag of docmost/docmost to build from (e.g. v0.96.0)
 extensions/             overlay: NEW files only, mirroring the upstream tree
-  packages/editor-ext/src/lib/table-of-contents/      Tiptap node (schema, command)
-  apps/client/src/features/editor/components/toc-block/  React node view + CSS module
+  packages/editor-ext/src/lib/table-of-contents/         TOC: Tiptap node (schema, command)
+  apps/client/src/features/editor/components/toc-block/  TOC: React node view + CSS module
+  apps/server/src/core/comment/resolution/               comment resolution: NestJS module
+  apps/client/src/features/comment/resolution/           comment resolution: hook, mutation, button
 patches/                small `git diff` patches to EXISTING upstream files (wiring only)
 scripts/build-tree.sh   clone upstream @ tag + overlay + patches  ->  build/
 Dockerfile              same thing inside a build stage, then the upstream build + runtime
@@ -65,9 +67,38 @@ Follow-ups:
 * UI strings use `t()` and fall back to English; add translations to
   `apps/client/public/locales/*/translation.json` via a patch if needed.
 
-## Adding a second extension
+### Comment resolution (resolve / re-open comment threads)
 
-Checklist of the four wiring points (plus one if the node is a block):
+Upstream ships the UI scaffolding for resolving comments in the open-source
+client (Open/Resolved tabs, menu item, API client call, websocket handling) and
+the data model in the open-source server (`resolved_at`, `resolved_by_id`,
+collaboration handler, notification job), but the `POST /comments/resolve`
+endpoint and the resolve button live in the enterprise edition and are gated by
+a license feature flag. This extension provides an **independent
+implementation** of the missing pieces; nothing is copied from any `ee`
+directory.
+
+* Server: `CommentResolutionModule` (new files) adds `POST /api/comments/resolve`
+  taking `{ commentId, pageId, resolved }`. Permission: anyone who may comment on
+  the page. It updates `resolved_at`/`resolved_by_id`, syncs the inline
+  comment mark through the collaboration server, emits the `commentResolved`
+  websocket event, queues the existing "comment resolved" notification and
+  writes `comment.resolved` / `comment.reopened` audit events. Only top-level
+  threads can be resolved. Registered via a two-line patch to `core.module.ts`.
+* Client: our own `useResolveCommentMutation`, a `ResolveCommentButton` and a
+  `useCanResolveComments()` hook (always true). One patch swaps the enterprise
+  imports in `comment-list-item.tsx` and `comment-menu.tsx` for ours.
+
+Note: Docmost sells this as an Enterprise feature. Building it here was a
+deliberate decision; the AGPL permits modifying the core, and the enterprise
+license only covers the `ee` directories, which this repo never copies.
+
+## Adding another extension
+
+Editor extensions need these wiring points (plus one if the node is a block).
+Server-side features follow the comment-resolution example instead: a new
+NestJS module under `extensions/apps/server/src/...` plus a patch to the module
+that should import it (`core.module.ts` or `app.module.ts`).
 
 1. **Schema**: new folder `extensions/packages/editor-ext/src/lib/<name>/` with the
    Tiptap `Node`/`Mark`/`Extension` and an `index.ts`. Follow upstream `callout` and
