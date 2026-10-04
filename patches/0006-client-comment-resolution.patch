@@ -1,0 +1,55 @@
+diff --git a/apps/client/src/features/comment/components/comment-list-item.tsx b/apps/client/src/features/comment/components/comment-list-item.tsx
+index 7cedcd8..c12e475 100644
+--- a/apps/client/src/features/comment/components/comment-list-item.tsx
++++ b/apps/client/src/features/comment/components/comment-list-item.tsx
+@@ -8,15 +8,14 @@ import { pageEditorAtom } from "@/features/editor/atoms/editor-atoms";
+ import { isEditorReady } from "@docmost/editor-ext";
+ import CommentActions from "@/features/comment/components/comment-actions";
+ import CommentMenu from "@/features/comment/components/comment-menu";
+-import { useHasFeature } from "@/ee/hooks/use-feature";
+-import { Feature } from "@/ee/features";
+-import ResolveComment from "@/ee/comment/components/resolve-comment";
++import { useCanResolveComments } from "@/features/comment/resolution/use-can-resolve-comments";
++import ResolveComment from "@/features/comment/resolution/resolve-comment-button";
+ import { useHover } from "@mantine/hooks";
+ import {
+   useDeleteCommentMutation,
+   useUpdateCommentMutation,
+ } from "@/features/comment/queries/comment-query";
+-import { useResolveCommentMutation } from "@/ee/comment/queries/comment-query";
++import { useResolveCommentMutation } from "@/features/comment/resolution/use-resolve-comment-mutation";
+ import { IComment } from "@/features/comment/types/comment.types";
+ import { CustomAvatar } from "@/components/ui/custom-avatar.tsx";
+ import { currentUserAtom } from "@/features/user/atoms/current-user-atom.ts";
+@@ -46,7 +45,7 @@ function CommentListItem({
+   const deleteCommentMutation = useDeleteCommentMutation(comment.pageId);
+   const resolveCommentMutation = useResolveCommentMutation();
+   const [currentUser] = useAtom(currentUserAtom);
+-  const canResolve = useHasFeature(Feature.COMMENT_RESOLUTION);
++  const canResolve = useCanResolveComments();
+   const createdAtAgo = useTimeAgo(comment.createdAt);
+ 
+   useEffect(() => {
+diff --git a/apps/client/src/features/comment/components/comment-menu.tsx b/apps/client/src/features/comment/components/comment-menu.tsx
+index 690815e..f738777 100644
+--- a/apps/client/src/features/comment/components/comment-menu.tsx
++++ b/apps/client/src/features/comment/components/comment-menu.tsx
+@@ -8,8 +8,7 @@ import {
+ } from "@tabler/icons-react";
+ import { modals } from "@mantine/modals";
+ import { useTranslation } from "react-i18next";
+-import { useHasFeature } from "@/ee/hooks/use-feature";
+-import { Feature } from "@/ee/features";
++import { useCanResolveComments } from "@/features/comment/resolution/use-can-resolve-comments";
+ import { useUpgradeLabel } from "@/ee/hooks/use-upgrade-label";
+ 
+ type CommentMenuProps = {
+@@ -30,7 +29,7 @@ function CommentMenu({
+   isParentComment = false,
+ }: CommentMenuProps) {
+   const { t } = useTranslation();
+-  const canResolve = useHasFeature(Feature.COMMENT_RESOLUTION);
++  const canResolve = useCanResolveComments();
+   const upgradeLabel = useUpgradeLabel();
+ 
+   //@ts-ignore
