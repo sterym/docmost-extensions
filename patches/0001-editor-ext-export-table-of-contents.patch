@@ -1,0 +1,12 @@
+diff --git a/packages/editor-ext/src/index.ts b/packages/editor-ext/src/index.ts
+index 80a67f4..5012f1d 100644
+--- a/packages/editor-ext/src/index.ts
++++ b/packages/editor-ext/src/index.ts
+@@ -32,6 +32,7 @@ export * from "./lib/columns";
+ export * from "./lib/status";
+ export * from "./lib/pdf";
+ export * from "./lib/page-break";
++export * from "./lib/table-of-contents";
+ export * from "./lib/footnotes";
+ export * from "./lib/resizable-nodeview";
+ export {

@@ -1,0 +1,20 @@
+diff --git a/apps/server/src/collaboration/collaboration.util.ts b/apps/server/src/collaboration/collaboration.util.ts
+index e5c55c7..1e51614 100644
+--- a/apps/server/src/collaboration/collaboration.util.ts
++++ b/apps/server/src/collaboration/collaboration.util.ts
+@@ -28,6 +28,7 @@ import {
+   TiptapAudio,
+   TiptapPdf,
+   PageBreak,
++  TableOfContents,
+   TrailingNode,
+   Attachment,
+   Drawio,
+@@ -112,6 +113,7 @@ export const tiptapExtensions = [
+   TiptapAudio,
+   TiptapPdf,
+   PageBreak,
++  TableOfContents,
+   Callout,
+   Attachment,
+   CustomCodeBlock,

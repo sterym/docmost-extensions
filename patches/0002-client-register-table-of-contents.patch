@@ -1,0 +1,30 @@
+diff --git a/apps/client/src/features/editor/extensions/extensions.ts b/apps/client/src/features/editor/extensions/extensions.ts
+index 7c685ac..cf6a675 100644
+--- a/apps/client/src/features/editor/extensions/extensions.ts
++++ b/apps/client/src/features/editor/extensions/extensions.ts
+@@ -45,6 +45,7 @@ import {
+   Embed,
+   TiptapPdf,
+   PageBreak,
++  TableOfContents,
+   SearchAndReplace,
+   Mention,
+   TableDndExtension,
+@@ -85,6 +86,7 @@ import MathInlineView from "@/features/editor/components/math/math-inline.tsx";
+ import MathBlockView from "@/features/editor/components/math/math-block.tsx";
+ import ImageView from "@/features/editor/components/image/image-view.tsx";
+ import CalloutView from "@/features/editor/components/callout/callout-view.tsx";
++import TocBlockView from "@/features/editor/components/toc-block/toc-block-view.tsx";
+ import StatusView from "@/features/editor/components/status/status-view.tsx";
+ import VideoView from "@/features/editor/components/video/video-view.tsx";
+ import AudioView from "@/features/editor/components/audio/audio-view.tsx";
+@@ -382,6 +384,9 @@ export const mainExtensions = [
+     view: PdfView,
+   }),
+   PageBreak,
++  TableOfContents.configure({
++    view: TocBlockView,
++  }),
+   Subpages.configure({
+     view: SubpagesView,
+   }),

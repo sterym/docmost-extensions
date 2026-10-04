@@ -1,0 +1,27 @@
+diff --git a/apps/client/src/features/editor/components/slash-menu/menu-items.ts b/apps/client/src/features/editor/components/slash-menu/menu-items.ts
+index d8598c5..9fcab03 100644
+--- a/apps/client/src/features/editor/components/slash-menu/menu-items.ts
++++ b/apps/client/src/features/editor/components/slash-menu/menu-items.ts
+@@ -21,6 +21,7 @@ import {
+   IconTypography,
+   IconMenu4,
+   IconPageBreak,
++  IconListTree,
+   IconCalendar,
+   IconClock,
+   IconAppWindow,
+@@ -178,6 +179,14 @@ const CommandGroups: SlashMenuGroupedItemsType = {
+       command: ({ editor, range }: CommandProps) =>
+         editor.chain().focus().deleteRange(range).setPageBreak().run(),
+     },
++    {
++      title: "Table of contents",
++      description: "Insert a live table of contents built from the page headings.",
++      searchTerms: ["toc", "table of contents", "outline", "headings"],
++      icon: IconListTree,
++      command: ({ editor, range }: CommandProps) =>
++        editor.chain().focus().deleteRange(range).setTableOfContents().run(),
++    },
+     {
+       title: "Footnote",
+       description: "Insert a footnote reference.",

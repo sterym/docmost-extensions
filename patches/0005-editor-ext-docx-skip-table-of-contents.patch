@@ -1,0 +1,12 @@
+diff --git a/packages/editor-ext/src/lib/prosemirror-docx/schema.ts b/packages/editor-ext/src/lib/prosemirror-docx/schema.ts
+index 235d796..395e6a0 100644
+--- a/packages/editor-ext/src/lib/prosemirror-docx/schema.ts
++++ b/packages/editor-ext/src/lib/prosemirror-docx/schema.ts
+@@ -191,6 +191,7 @@ export const defaultAsyncNodes: NodeSerializerAsync = {
+   footnote() {},
+   // No usable static export representation: skip without failing.
+   subpages() {},
++  tableOfContents() {},
+   transclusionReference() {},
+   base() {},
+ };
