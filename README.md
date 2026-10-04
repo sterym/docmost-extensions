@@ -26,8 +26,10 @@ build/                  generated, git-ignored
 * Upstream moves fast. Bumping is a one-line change to `UPSTREAM_VERSION`; only the
   patches can conflict, and they are a few lines each.
 * Our code is clearly separated from upstream code (licensing, review, ownership).
-* The runtime image is byte-for-byte the upstream recipe: same base image, pnpm
-  version, pruning, `USER node`, volume and `CMD`.
+* The runtime image follows the upstream recipe: same base image, pnpm version,
+  pruning, `USER node` and `CMD`. The only omission is upstream's
+  `VOLUME ["/app/data/storage"]` instruction, which Railway's builder rejects;
+  mount a volume at that path yourself (Railway Volume, or the compose file).
 
 What the build does **not** include: the private `apps/server/src/ee` submodule
 (Docmost Enterprise). The server checks for it with guarded `require()` calls and
@@ -163,8 +165,11 @@ The Railway service currently runs the `docmost/docmost` image. Switch it to thi
    needs network access to fetch upstream, which Railway provides.
 4. Keep the template's **Postgres** and **Redis** services and the existing service
    **variables** (`APP_URL`, `APP_SECRET`, `DATABASE_URL`, `REDIS_URL`, storage/mail
-   settings). Nothing changes: the image exposes port 3000, runs `pnpm start` as the
-   upstream image does, and uses the same `/app/data/storage` volume path.
+   settings). Nothing changes: the image exposes port 3000 and runs `pnpm start` as
+   the upstream image does. If `STORAGE_DRIVER` is `local` (the template default),
+   make sure the service has a **Railway Volume mounted at `/app/data/storage`**; the
+   template ships one, and the Dockerfile cannot declare it (Railway rejects
+   `VOLUME`).
 5. Deploy. Watch the build log for the `==> Applying ...patch` lines and the health
    check on `/api/health`. Database migrations run on start as before.
 

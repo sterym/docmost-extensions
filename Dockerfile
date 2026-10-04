@@ -87,7 +87,10 @@ RUN pnpm install --frozen-lockfile --prod && rm -rf /home/node/.cache/pnpm
 
 RUN mkdir -p /app/data/storage
 
-VOLUME ["/app/data/storage"]
+# Upstream declares `VOLUME ["/app/data/storage"]` here. Railway rejects the
+# VOLUME instruction ("use Railway Volumes"), so it is omitted; attach a Railway
+# Volume at /app/data/storage when STORAGE_DRIVER=local. Docker Compose users
+# get the same effect from the `volumes:` entry in docker-compose.yml.
 
 EXPOSE 3000
 
